@@ -1,8 +1,111 @@
 .boardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 16px;
   margin-bottom: 16px;
+}
+
+.boardFilter {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.boardFilter__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--fg-secondary);
+  font: 600 12.5px var(--font-body);
+  white-space: nowrap;
+}
+
+.boardFilter__count {
+  color: var(--brand-fg);
+  background: var(--brand-bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font: 700 11px var(--font-body);
+}
+
+.boardFilter__menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  min-width: 240px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.boardFilter__showAll {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand-fg);
+  font: 600 12.5px var(--font-body);
+}
+
+.boardFilter__showAll:hover {
+  background: var(--brand-bg);
+}
+
+.boardFilter__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font: 500 12.5px var(--font-body);
+  color: var(--fg-primary);
+  cursor: pointer;
+}
+
+.boardFilter__option:hover {
+  background: var(--bg-subtle);
+}
+
+.boardFilter__option input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--c-amber-600);
+  flex-shrink: 0;
+}
+
+.boardFilter__option span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.boardFilter__optionCount {
+  color: var(--fg-tertiary);
+  font: 700 11px var(--font-body);
+  background: var(--bg-hover);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+.boardEmpty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--fg-tertiary);
+  font: 500 13px var(--font-body);
+  background: var(--bg-subtle);
+  border-radius: 14px;
 }
 
 .boardColumns {
@@ -16,6 +119,23 @@
 }
 
 @media (max-width: 768px) {
+  .boardHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .boardFilter__btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .boardFilter__menu {
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
+
   .boardColumns {
     margin: 0 -14px;
     padding: 0 14px 16px;
