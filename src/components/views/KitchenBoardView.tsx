@@ -1,25 +1,25 @@
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
 import { KanbanColumn } from '../orders/KanbanColumn'
 import { OrderCard } from '../orders/OrderCard'
 import './KitchenBoardView.css'
 
 export function KitchenBoardView() {
   const dash = useDashboard()
+  const t = useT()
 
   return (
     <>
       <div className="boardHeader">
         <div>
-          <h1 className="pageTitle">Kitchen Board</h1>
-          <p className="pageSubtitle">
-            Live view of every WhatsApp order moving through the kitchen.
-          </p>
+          <h1 className="pageTitle">{t('board.title')}</h1>
+          <p className="pageSubtitle">{t('board.subtitle')}</p>
         </div>
       </div>
       <div className="boardColumns">
         <KanbanColumn
-          title="Needs attention"
-          subtitle="Blocked — needs a human"
+          title={t('board.col.needs_attention')}
+          subtitle={t('board.col.needs_attention.sub')}
           count={dash.needsAttentionCount}
           iconClassName="kanbanColumn__icon--coral"
           icon={
@@ -34,8 +34,8 @@ export function KitchenBoardView() {
         </KanbanColumn>
 
         <KanbanColumn
-          title="Ready for kitchen"
-          subtitle="Confirmed & paid"
+          title={t('board.col.ready_for_kitchen')}
+          subtitle={t('board.col.ready_for_kitchen.sub')}
           count={dash.readyForKitchenCount}
           iconClassName="kanbanColumn__icon--cold"
           icon={
@@ -50,8 +50,8 @@ export function KitchenBoardView() {
         </KanbanColumn>
 
         <KanbanColumn
-          title="Preparing"
-          subtitle="Actively cooking"
+          title={t('board.col.preparing')}
+          subtitle={t('board.col.preparing.sub')}
           count={dash.preparingCount}
           iconClassName="kanbanColumn__icon--amber"
           icon={
@@ -66,8 +66,8 @@ export function KitchenBoardView() {
         </KanbanColumn>
 
         <KanbanColumn
-          title="Ready"
-          subtitle="For pickup or dispatch"
+          title={t('board.col.ready')}
+          subtitle={t('board.col.ready.sub')}
           count={dash.readyCount}
           iconClassName="kanbanColumn__icon--teal"
           icon={
@@ -82,8 +82,8 @@ export function KitchenBoardView() {
         </KanbanColumn>
 
         <KanbanColumn
-          title="Out for delivery"
-          subtitle="On the way"
+          title={t('board.col.out_for_delivery')}
+          subtitle={t('board.col.out_for_delivery.sub')}
           count={dash.outForDeliveryCount}
           iconClassName="kanbanColumn__icon--cold"
           icon={
@@ -98,8 +98,8 @@ export function KitchenBoardView() {
         </KanbanColumn>
 
         <KanbanColumn
-          title="Completed"
-          subtitle="Delivered or picked up"
+          title={t('board.col.completed')}
+          subtitle={t('board.col.completed.sub')}
           count={dash.completedCount}
           iconClassName="kanbanColumn__icon--neutral"
           icon={

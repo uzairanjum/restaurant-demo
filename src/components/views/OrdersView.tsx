@@ -1,21 +1,23 @@
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
 
 export function OrdersView() {
   const { filteredAllOrders, selectOrder } = useDashboard()
+  const t = useT()
 
   return (
     <>
-      <h1 className="pageTitle">Orders</h1>
-      <p className="pageSubtitle">Every order placed today across all channels.</p>
+      <h1 className="pageTitle">{t('orders.title')}</h1>
+      <p className="pageSubtitle">{t('orders.subtitle')}</p>
       <div className="tableShell">
         <div className="tableHead" style={{ gridTemplateColumns: '1fr 1.6fr 1.6fr 1fr 1fr 1fr 0.9fr' }}>
-          <div>Order</div>
-          <div>Customer</div>
-          <div>Items</div>
-          <div>Type</div>
-          <div>Payment</div>
-          <div>Status</div>
-          <div style={{ textAlign: 'right' }}>Total</div>
+          <div>{t('orders.col.order')}</div>
+          <div>{t('orders.col.customer')}</div>
+          <div>{t('orders.col.items')}</div>
+          <div>{t('orders.col.type')}</div>
+          <div>{t('orders.col.payment')}</div>
+          <div>{t('orders.col.status')}</div>
+          <div style={{ textAlign: 'right' }}>{t('orders.col.total')}</div>
         </div>
         {filteredAllOrders.map((o) => (
           <button

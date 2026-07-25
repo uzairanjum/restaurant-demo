@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
 import type { Order } from '../../types/order'
 import { enrichOrder } from '../../utils/orderUtils'
 import './OrderDetail.css'
@@ -56,6 +57,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
     cancelOrder,
     contactCustomer,
   } = useDashboard()
+  const t = useT()
 
   const [draft, setDraft] = useState('')
   const [extraMessages, setExtraMessages] = useState<
@@ -81,22 +83,22 @@ export function OrderDetail({ order }: OrderDetailProps) {
 
   const advanceLabel =
     ({
-      ready_for_kitchen: 'Start preparing',
-      preparing: 'Mark ready',
-      ready: isDelivery ? 'Send out for delivery' : 'Mark picked up',
-      out_for_delivery: 'Mark delivered',
-    } as Partial<Record<Order['status'], string>>)[order.status] || 'Advance'
+      ready_for_kitchen: t('detail.advance.start'),
+      preparing: t('detail.advance.ready'),
+      ready: isDelivery ? t('detail.advance.delivery') : t('detail.advance.pickup'),
+      out_for_delivery: t('detail.advance.delivered'),
+    } as Partial<Record<Order['status'], string>>)[order.status] || t('detail.advance.default')
 
   const resolveLabel =
     order.issueType === 'payment_invalid'
-      ? 'Retry verification'
-      : 'Move to ready for kitchen'
+      ? t('detail.resolve.retry')
+      : t('detail.resolve.move')
 
   const reviewStatus = order.proof?.reviewStatus
   const reviewBadgeStyles = {
-    review: { background: '#FFF8EB', color: '#8A5208', label: 'Under review' },
-    verified: { background: '#EAFBF6', color: '#07604D', label: 'Verified' },
-    rejected: { background: '#FFF0F1', color: '#9B1B2C', label: 'Rejected' },
+    review: { background: '#FFF8EB', color: '#8A5208', label: t('detail.review.under') },
+    verified: { background: '#EAFBF6', color: '#07604D', label: t('detail.review.verified') },
+    rejected: { background: '#FFF0F1', color: '#9B1B2C', label: t('detail.review.rejected') },
   } as const
 
   const reviewBadge = reviewStatus ? reviewBadgeStyles[reviewStatus] : null
@@ -125,7 +127,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
           </svg>
         </button>
         <div className="orderDetail__headerMain">
-          <h1>Order #{order.id}</h1>
+          <h1>{t('detail.order', { id: order.id })}</h1>
           <div className="orderDetail__chips">
             <span style={order.columnChipStyle}>{order.columnLabel}</span>
             {order.issueLabel && (
@@ -133,7 +135,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
             )}
           </div>
           <div className="orderDetail__meta">
-            Placed {order.timeLabel} ago · {order.placedTimeLabel} · via WhatsApp
+            {t('detail.placed', { time: order.timeLabel, clock: order.placedTimeLabel })}
           </div>
         </div>
       </div>
@@ -142,8 +144,8 @@ export function OrderDetail({ order }: OrderDetailProps) {
         <div className="orderDetail__left">
           <div className="card">
             <div className="orderDetail__cardHead">
-              <h2 className="cardTitle">Customer</h2>
-              <button type="button" className="orderDetail__editBtn">Edit</button>
+              <h2 className="cardTitle">{t('detail.customer')}</h2>
+              <button type="button" className="orderDetail__editBtn">{t('detail.edit')}</button>
             </div>
             <div className="orderDetail__customerBlock">
               <div className="orderDetail__customerRow">
@@ -162,53 +164,53 @@ export function OrderDetail({ order }: OrderDetailProps) {
               </div>
               {isDelivery && (
                 <div className="orderDetail__addressBox">
-                  <div className="fieldLabel">Delivery address</div>
+                  <div className="fieldLabel">{t('detail.deliveryAddress')}</div>
                   {hasAddress ? (
                     <>
                       <div>{order.address}</div>
                       {order.deliveryNote && (
-                        <div className="orderDetail__note">Note: {order.deliveryNote}</div>
+                        <div className="orderDetail__note">{t('detail.note', { note: order.deliveryNote })}</div>
                       )}
                     </>
                   ) : hasNoAddress ? (
-                    <div className="orderDetail__missingAddress">No address on file yet</div>
+                    <div className="orderDetail__missingAddress">{t('detail.noAddress')}</div>
                   ) : null}
                 </div>
               )}
               {!isDelivery && (
-                <div className="orderDetail__addressBox">Pickup in-store</div>
+                <div className="orderDetail__addressBox">{t('detail.pickup')}</div>
               )}
             </div>
           </div>
 
           <div className="card">
-            <h2 className="cardTitle">Order status</h2>
+            <h2 className="cardTitle">{t('detail.orderStatus')}</h2>
             <div className="orderDetail__statusGrid">
               <div>
-                <div className="fieldLabel">Order status</div>
+                <div className="fieldLabel">{t('detail.orderStatus')}</div>
                 <span style={order.columnChipStyle}>{order.columnLabel}</span>
               </div>
               <div>
-                <div className="fieldLabel">Payment status</div>
+                <div className="fieldLabel">{t('detail.paymentStatus')}</div>
                 <span style={order.paymentStatusChipStyle}>{order.paymentStatusLabel}</span>
               </div>
               <div>
-                <div className="fieldLabel">Channel</div>
-                <div className="orderDetail__value">WhatsApp</div>
+                <div className="fieldLabel">{t('detail.channel')}</div>
+                <div className="orderDetail__value">{t('detail.whatsapp')}</div>
               </div>
               <div>
-                <div className="fieldLabel">Order type</div>
+                <div className="fieldLabel">{t('detail.orderType')}</div>
                 <div className="orderDetail__value">{order.fulfillmentLabel}</div>
               </div>
               <div>
-                <div className="fieldLabel">Payment method</div>
+                <div className="fieldLabel">{t('detail.paymentMethod')}</div>
                 <div className="orderDetail__value">{order.paymentMethodLabel}</div>
               </div>
             </div>
           </div>
 
           <div className="card">
-            <h2 className="cardTitle">Order summary</h2>
+            <h2 className="cardTitle">{t('detail.summary')}</h2>
             <div className="orderDetail__items">
               {order.items.map((it) => (
                 <div key={`${it.name}-${it.qty}`} className="orderDetail__itemRow">
@@ -221,24 +223,24 @@ export function OrderDetail({ order }: OrderDetailProps) {
               ))}
             </div>
             <div className="orderDetail__totals">
-              <div><span>Subtotal</span><span>${order.subtotalStr}</span></div>
-              <div><span>Delivery fee</span><span>${order.deliveryFeeStr}</span></div>
-              <div className="orderDetail__totalRow"><span>Total</span><span>${order.totalStr}</span></div>
+              <div><span>{t('detail.subtotal')}</span><span>${order.subtotalStr}</span></div>
+              <div><span>{t('detail.deliveryFee')}</span><span>${order.deliveryFeeStr}</span></div>
+              <div className="orderDetail__totalRow"><span>{t('detail.total')}</span><span>${order.totalStr}</span></div>
               {isBankTransfer && (
                 <div className="orderDetail__expected">
-                  <span>Amount expected</span><span>${order.totalStr}</span>
+                  <span>{t('detail.amountExpected')}</span><span>${order.totalStr}</span>
                 </div>
               )}
             </div>
             {order.customerNote && (
               <div className="orderDetail__noteBox">
-                <div className="fieldLabel">Customer note</div>
+                <div className="fieldLabel">{t('detail.customerNote')}</div>
                 <div>{order.customerNote}</div>
               </div>
             )}
             {order.internalNote && (
               <div className="orderDetail__internalNote">
-                <div className="fieldLabel" style={{ color: 'var(--accent-fg)' }}>Internal kitchen note</div>
+                <div className="fieldLabel" style={{ color: 'var(--accent-fg)' }}>{t('detail.internalNote')}</div>
                 <div>{order.internalNote}</div>
               </div>
             )}
@@ -247,37 +249,37 @@ export function OrderDetail({ order }: OrderDetailProps) {
           <div className="card orderDetail__actions">
             {showPaymentActions && (
               <div>
-                <div className="fieldLabel">Payment review</div>
+                <div className="fieldLabel">{t('detail.paymentReview')}</div>
                 <div className="orderDetail__actionRow">
-                  <button type="button" className="btnTeal" onClick={() => markVerified(order.id)}>Mark as verified</button>
-                  <button type="button" className="btnReject" onClick={() => rejectPayment(order.id)}>Reject payment</button>
+                  <button type="button" className="btnTeal" onClick={() => markVerified(order.id)}>{t('detail.markVerified')}</button>
+                  <button type="button" className="btnReject" onClick={() => rejectPayment(order.id)}>{t('detail.rejectPayment')}</button>
                 </div>
               </div>
             )}
             {showProgressActions && (
               <div>
-                <div className="fieldLabel">Order progression</div>
+                <div className="fieldLabel">{t('detail.progression')}</div>
                 <div className="orderDetail__actionRow">
                   <button type="button" className="btnPrimary orderDetail__advanceBtn" onClick={() => advanceStatus(order.id)}>{advanceLabel}</button>
-                  <button type="button" className="btnSecondary orderDetail__advanceBtn" onClick={() => contactCustomer(order.id)}>Contact customer</button>
+                  <button type="button" className="btnSecondary orderDetail__advanceBtn" onClick={() => contactCustomer(order.id)}>{t('detail.contact')}</button>
                 </div>
               </div>
             )}
             {showResolveActions && (
               <div>
-                <div className="fieldLabel">Resolve issue</div>
+                <div className="fieldLabel">{t('detail.resolveIssue')}</div>
                 <div className="orderDetail__actionRow">
-                  <button type="button" className="btnSecondary orderDetail__advanceBtn" onClick={() => contactCustomer(order.id)}>Contact customer</button>
+                  <button type="button" className="btnSecondary orderDetail__advanceBtn" onClick={() => contactCustomer(order.id)}>{t('detail.contact')}</button>
                   <button type="button" className="btnPrimary orderDetail__advanceBtn" onClick={() => resolveIssue(order.id)}>{resolveLabel}</button>
                 </div>
               </div>
             )}
             {showCompletedNote && (
-              <div className="orderDetail__completedNote">This order is complete — no further action needed.</div>
+              <div className="orderDetail__completedNote">{t('detail.completedNote')}</div>
             )}
             {showCancel && (
               <div className="orderDetail__cancelRow">
-                <button type="button" className="orderDetail__cancelBtn" onClick={() => cancelOrder(order.id)}>Cancel order</button>
+                <button type="button" className="orderDetail__cancelBtn" onClick={() => cancelOrder(order.id)}>{t('detail.cancel')}</button>
               </div>
             )}
           </div>
@@ -287,7 +289,7 @@ export function OrderDetail({ order }: OrderDetailProps) {
           {isBankTransfer && order.proof && (
             <div className="card">
               <div className="orderDetail__cardHead">
-                <h2 className="cardTitle">Payment proof</h2>
+                <h2 className="cardTitle">{t('detail.paymentProof')}</h2>
                 {reviewBadge && (
                   <span
                     className="orderDetail__reviewBadge"
@@ -298,39 +300,39 @@ export function OrderDetail({ order }: OrderDetailProps) {
                 )}
               </div>
               <div className="orderDetail__proofPlaceholder">
-                Payment screenshot attaches here in the live app
+                {t('detail.proofPlaceholder')}
               </div>
               <div className="orderDetail__proofGrid">
-                <div><div className="fieldLabel">Transaction ID</div><div className="orderDetail__value">{order.proof.txnId}</div></div>
-                <div><div className="fieldLabel">Sender</div><div className="orderDetail__value">{order.proof.sender}</div></div>
-                <div><div className="fieldLabel">Reference</div><div className="orderDetail__value">{order.proof.reference}</div></div>
-                <div><div className="fieldLabel">Date</div><div className="orderDetail__value">{order.proof.date}</div></div>
+                <div><div className="fieldLabel">{t('detail.txnId')}</div><div className="orderDetail__value">{order.proof.txnId}</div></div>
+                <div><div className="fieldLabel">{t('detail.sender')}</div><div className="orderDetail__value">{order.proof.sender}</div></div>
+                <div><div className="fieldLabel">{t('detail.reference')}</div><div className="orderDetail__value">{order.proof.reference}</div></div>
+                <div><div className="fieldLabel">{t('detail.date')}</div><div className="orderDetail__value">{order.proof.date}</div></div>
                 <div>
-                  <div className="fieldLabel">Amount received</div>
+                  <div className="fieldLabel">{t('detail.amountReceived')}</div>
                   <div style={{ font: '700 12.5px Inter, sans-serif', color: order.proof.amount !== order.total ? '#C42A3D' : 'var(--fg-primary)' }}>
                     ${order.proof.amount}
                   </div>
                 </div>
-                <div><div className="fieldLabel">Amount expected</div><div className="orderDetail__value">${order.totalStr}</div></div>
+                <div><div className="fieldLabel">{t('detail.amountExpected')}</div><div className="orderDetail__value">${order.totalStr}</div></div>
               </div>
-              <a href="#" className="orderDetail__proofLink">View original ↗</a>
+              <a href="#" className="orderDetail__proofLink">{t('detail.viewOriginal')}</a>
               <div className="orderDetail__reviewNotes">
-                <div className="fieldLabel">Review notes</div>
-                <textarea defaultValue={order.proof.notes} placeholder="Add a note about this review…" />
+                <div className="fieldLabel">{t('detail.reviewNotes')}</div>
+                <textarea defaultValue={order.proof.notes} placeholder={t('detail.reviewNotesPlaceholder')} />
               </div>
             </div>
           )}
 
           <div className="card orderDetail__conversation">
             <div className="orderDetail__cardHead">
-              <h2 className="cardTitle">Conversation</h2>
-              <a href="#" className="orderDetail__proofLink">View all ↗</a>
+              <h2 className="cardTitle">{t('detail.conversation')}</h2>
+              <a href="#" className="orderDetail__proofLink">{t('detail.viewAll')}</a>
             </div>
             <div className="orderDetail__messages">
               {conversation.map((m, i) => (
                 <div key={i} style={m.rowStyle}>
                   <div style={m.bubbleStyle}>
-                    {m.ai && <div className="orderDetail__aiLabel">✦ AI parsed</div>}
+                    {m.ai && <div className="orderDetail__aiLabel">{t('conversations.ai')}</div>}
                     <div>{m.text}</div>
                     <div className="orderDetail__msgTime">{m.time}</div>
                   </div>
@@ -342,9 +344,9 @@ export function OrderDetail({ order }: OrderDetailProps) {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                placeholder="Send a WhatsApp message…"
+                placeholder={t('conversations.placeholder')}
               />
-              <button type="button" className="btnPrimary" onClick={sendMessage}>Send</button>
+              <button type="button" className="btnPrimary" onClick={sendMessage}>{t('conversations.send')}</button>
             </div>
           </div>
         </div>

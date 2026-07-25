@@ -1,21 +1,21 @@
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
 
 export function CustomersView() {
   const { customers, selectOrder } = useDashboard()
+  const t = useT()
 
   return (
     <>
-      <h1 className="pageTitle">Customers</h1>
-      <p className="pageSubtitle">
-        Everyone who has ordered through WhatsApp, aggregated across orders.
-      </p>
+      <h1 className="pageTitle">{t('customers.title')}</h1>
+      <p className="pageSubtitle">{t('customers.subtitle')}</p>
       <div className="tableShell">
         <div className="tableHead" style={{ gridTemplateColumns: '1.6fr 1fr 0.8fr 1fr 1.2fr' }}>
-          <div>Customer</div>
-          <div>Phone</div>
-          <div>Orders</div>
-          <div>Lifetime spend</div>
-          <div>Last order</div>
+          <div>{t('customers.col.customer')}</div>
+          <div>{t('customers.col.phone')}</div>
+          <div>{t('customers.col.orders')}</div>
+          <div>{t('customers.col.spend')}</div>
+          <div>{t('customers.col.last')}</div>
         </div>
         {customers.map((c) => (
           <button

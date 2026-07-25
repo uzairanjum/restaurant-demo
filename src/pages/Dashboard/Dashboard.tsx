@@ -1,3 +1,4 @@
+import { LanguageProvider } from '../../context/LanguageContext'
 import { DashboardProvider, useDashboard } from '../../context/DashboardContext'
 import { Header } from '../../components/layout/Header'
 import { Sidebar } from '../../components/layout/Sidebar'
@@ -41,8 +42,10 @@ function DashboardContent() {
 
 export function Dashboard() {
   return (
-    <DashboardProvider>
-      <DashboardContent />
-    </DashboardProvider>
+    <LanguageProvider>
+      <DashboardProvider>
+        <DashboardContent />
+      </DashboardProvider>
+    </LanguageProvider>
   )
 }

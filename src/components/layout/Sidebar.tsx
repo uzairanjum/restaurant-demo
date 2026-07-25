@@ -1,17 +1,35 @@
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
+import type { TranslationKey } from '../../i18n'
 import './Sidebar.css'
 
-const navItems = [
-  { key: 'board', label: 'Kitchen Board', action: 'goToBoard', style: 'navBoardStyle', icon: 'board' },
-  { key: 'orders', label: 'Orders', action: 'goToOrders', style: 'navOrdersStyle', icon: 'orders' },
-  { key: 'attention', label: 'Needs attention', action: 'goToAttention', style: 'navAttentionStyle', icon: 'attention', badge: true },
-  { key: 'payments', label: 'Payments', action: 'goToPayments', style: 'navPaymentsStyle', icon: 'payments' },
-  { key: 'conversations', label: 'Conversations', action: 'goToConversations', style: 'navConversationsStyle', icon: 'conversations' },
-  { key: 'customers', label: 'Customers', action: 'goToCustomers', style: 'navCustomersStyle', icon: 'customers' },
-  { key: 'menu', label: 'Menu', action: 'goToMenu', style: 'navMenuStyle', icon: 'menu' },
-  { key: 'reports', label: 'Reports', action: 'goToPlaceholder', style: 'navReportsStyle', icon: 'reports' },
-  { key: 'settings', label: 'Settings', action: 'goToPlaceholder', style: 'navSettingsStyle', icon: 'settings' },
-] as const
+const navItems: Array<{
+  key: string
+  labelKey: TranslationKey
+  action: string
+  style:
+    | 'navBoardStyle'
+    | 'navOrdersStyle'
+    | 'navAttentionStyle'
+    | 'navPaymentsStyle'
+    | 'navConversationsStyle'
+    | 'navCustomersStyle'
+    | 'navMenuStyle'
+    | 'navReportsStyle'
+    | 'navSettingsStyle'
+  icon: string
+  badge?: boolean
+}> = [
+  { key: 'board', labelKey: 'nav.board', action: 'goToBoard', style: 'navBoardStyle', icon: 'board' },
+  { key: 'orders', labelKey: 'nav.orders', action: 'goToOrders', style: 'navOrdersStyle', icon: 'orders' },
+  { key: 'attention', labelKey: 'nav.attention', action: 'goToAttention', style: 'navAttentionStyle', icon: 'attention', badge: true },
+  { key: 'payments', labelKey: 'nav.payments', action: 'goToPayments', style: 'navPaymentsStyle', icon: 'payments' },
+  { key: 'conversations', labelKey: 'nav.conversations', action: 'goToConversations', style: 'navConversationsStyle', icon: 'conversations' },
+  { key: 'customers', labelKey: 'nav.customers', action: 'goToCustomers', style: 'navCustomersStyle', icon: 'customers' },
+  { key: 'menu', labelKey: 'nav.menu', action: 'goToMenu', style: 'navMenuStyle', icon: 'menu' },
+  { key: 'reports', labelKey: 'nav.reports', action: 'goToPlaceholder', style: 'navReportsStyle', icon: 'reports' },
+  { key: 'settings', labelKey: 'nav.settings', action: 'goToPlaceholder', style: 'navSettingsStyle', icon: 'settings' },
+]
 
 function NavIcon({ name }: { name: string }) {
   switch (name) {
@@ -78,40 +96,67 @@ function NavIcon({ name }: { name: string }) {
 
 export function Sidebar() {
   const dash = useDashboard()
+  const t = useT()
 
   return (
-    <aside className="sidebar">
-      <nav className="sidebar__nav">
-        {navItems.map((item) => (
+    <>
+      <button
+        type="button"
+        className={`sidebarBackdrop${dash.sidebarOpen ? ' sidebarBackdrop--open' : ''}`}
+        aria-label={t('nav.close')}
+        onClick={dash.closeSidebar}
+      />
+      <aside className={`sidebar${dash.sidebarOpen ? ' sidebar--open' : ''}`}>
+        <div className="sidebar__mobileHead">
+          <div className="sidebar__mobileBrand">
+            <div className="sidebar__mobileLogo">TQ</div>
+            <div>
+              <div className="sidebar__mobileName">Tierra Querida</div>
+              <div className="sidebar__mobileSub">{t('brand.subtitle')}</div>
+            </div>
+          </div>
           <button
-            key={item.key}
             type="button"
-            style={dash[item.style]}
-            onClick={() => {
-              const fn = dash[item.action as keyof typeof dash]
-              if (typeof fn === 'function') (fn as () => void)()
-            }}
+            className="sidebar__closeBtn"
+            onClick={dash.closeSidebar}
+            aria-label={t('nav.close')}
           >
-            <NavIcon name={item.icon} />
-            {item.label}
-            {'badge' in item && item.badge && (
-              <span className="attentionBadge">{dash.needsAttentionCount}</span>
-            )}
+            ✕
           </button>
-        ))}
-      </nav>
+        </div>
 
-      <div className="sidebar__stats">
-        <div className="sidebar__statsLabel">Quick stats</div>
-        <div>
-          <div className="sidebar__statValue">{dash.activeOrdersCount}</div>
-          <div className="sidebar__statLabel">Active orders</div>
+        <nav className="sidebar__nav">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              style={dash[item.style]}
+              onClick={() => {
+                const fn = dash[item.action as keyof typeof dash]
+                if (typeof fn === 'function') (fn as () => void)()
+              }}
+            >
+              <NavIcon name={item.icon} />
+              {t(item.labelKey)}
+              {item.badge && (
+                <span className="attentionBadge">{dash.needsAttentionCount}</span>
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="sidebar__stats">
+          <div className="sidebar__statsLabel">{t('stats.quick')}</div>
+          <div>
+            <div className="sidebar__statValue">{dash.activeOrdersCount}</div>
+            <div className="sidebar__statLabel">{t('stats.activeOrders')}</div>
+          </div>
+          <div>
+            <div className="sidebar__statValue">{dash.avgPrepTime}</div>
+            <div className="sidebar__statLabel">{t('stats.avgPrep')}</div>
+          </div>
         </div>
-        <div>
-          <div className="sidebar__statValue">{dash.avgPrepTime}</div>
-          <div className="sidebar__statLabel">Avg. prep time</div>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }

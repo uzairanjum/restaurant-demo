@@ -1,6 +1,9 @@
+import { useT } from '../../context/LanguageContext'
 import './PlaceholderView.css'
 
 export function PlaceholderView() {
+  const t = useT()
+
   return (
     <div className="placeholder">
       <div className="placeholder__icon">
@@ -10,10 +13,8 @@ export function PlaceholderView() {
           <circle cx="12" cy="15.5" r=".5" fill="currentColor" />
         </svg>
       </div>
-      <div className="placeholder__title">Not part of this POC</div>
-      <div className="placeholder__text">
-        This section isn't built out yet — this pass focuses on the kitchen board, order detail, and payment review flow.
-      </div>
+      <div className="placeholder__title">{t('placeholder.title')}</div>
+      <div className="placeholder__text">{t('placeholder.text')}</div>
     </div>
   )
 }

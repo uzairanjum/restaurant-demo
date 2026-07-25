@@ -215,3 +215,48 @@
   padding: 14px 20px;
   border-top: 1px solid var(--border-subtle);
 }
+
+@media (max-width: 640px) {
+  .menuGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .menuCategoryInput {
+    flex-wrap: wrap;
+  }
+
+  .menuCategoryInput input {
+    width: 100%;
+  }
+
+  .menuModalOverlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .menuModal {
+    width: 100%;
+    max-height: 92dvh;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .menuModal__addonInput {
+    flex-wrap: wrap;
+  }
+
+  .menuModal__addonInput input:nth-child(2) {
+    width: 100%;
+  }
+
+  .menuModal__addonInput button {
+    width: 100%;
+  }
+
+  .menuModal__foot {
+    flex-wrap: wrap;
+  }
+
+  .menuModal__foot button {
+    flex: 1;
+  }
+}

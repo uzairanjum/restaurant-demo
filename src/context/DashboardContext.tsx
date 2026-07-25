@@ -15,12 +15,13 @@ import type {
   MenuCategory,
   Order,
 } from '../types/order'
+import { useT } from './LanguageContext'
 import {
   bubbleForMain,
-  COLUMN_LABELS,
   enrichOrder,
   money,
   navStyle,
+  statusLabel,
 } from '../utils/orderUtils'
 
 interface DashboardContextValue {
@@ -28,6 +29,7 @@ interface DashboardContextValue {
   previousView: DashboardView
   location: string
   showLocationMenu: boolean
+  sidebarOpen: boolean
   kitchenOnline: boolean
   searchQuery: string
   toast: string | null
@@ -102,6 +104,8 @@ interface DashboardContextValue {
   navReportsStyle: React.CSSProperties
   navSettingsStyle: React.CSSProperties
   toggleLocationMenu: () => void
+  toggleSidebar: () => void
+  closeSidebar: () => void
   selectRomaNorte: () => void
   selectCondesa: () => void
   toggleKitchenOnline: () => void
@@ -116,6 +120,7 @@ interface DashboardContextValue {
   goToPlaceholder: () => void
   selectOrder: (id: string) => void
   goBack: () => void
+  clearConversationSelection: () => void
   markVerified: (id: string) => void
   rejectPayment: (id: string) => void
   advanceStatus: (id: string) => void
@@ -139,11 +144,13 @@ interface DashboardContextValue {
 const DashboardContext = createContext<DashboardContextValue | null>(null)
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
+  const t = useT()
   const [view, setView] = useState<DashboardView>('board')
   const [previousView, setPreviousView] = useState<DashboardView>('board')
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [location, setLocation] = useState('Roma Norte')
   const [showLocationMenu, setShowLocationMenu] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [kitchenOnline, setKitchenOnline] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [orders, setOrders] = useState(buildOrders)
@@ -177,6 +184,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return 'detail'
     })
     setSelectedOrderId(id)
+    setSidebarOpen(false)
   }, [])
 
   const value = useMemo((): DashboardContextValue => {
@@ -185,7 +193,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     )
     const enriched = orders
       .filter((o) => o.status !== 'cancelled')
-      .map((o) => enrichOrder(o))
+      .map((o) => enrichOrder(o, t))
     const q = searchQuery.trim().toLowerCase()
     const matches = (o: { customer: string; phone: string; id: string }) =>
       !q ||
@@ -198,7 +206,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const selectedRaw = selectedOrderId
       ? orders.find((o) => o.id === selectedOrderId)
       : null
-    const selectedOrder = selectedRaw ? enrichOrder(selectedRaw) : null
+    const selectedOrder = selectedRaw ? enrichOrder(selectedRaw, t) : null
 
     const totalPrepMin = active
       .filter((o) => ['preparing', 'ready_for_kitchen'].includes(o.status))
@@ -218,6 +226,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       previousView,
       location,
       showLocationMenu,
+      sidebarOpen,
       kitchenOnline,
       searchQuery,
       toast,
@@ -307,7 +316,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             .slice(0, 2)
             .join('')
             .toUpperCase(),
-          lastMessage: last ? last.text : 'No messages yet',
+          lastMessage: last ? last.text : t('conversations.noMessages'),
           timeLabel: `${o.placedMinAgo}m`,
           selected: o.id === selConvId,
         }
@@ -339,7 +348,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         background: kitchenOnline ? '#0F9C7E' : '#94979C',
         display: 'inline-block',
       },
-      kitchenStatusLabel: kitchenOnline ? 'Kitchen online' : 'Kitchen offline',
+      kitchenStatusLabel: kitchenOnline
+        ? t('header.kitchenOnline')
+        : t('header.kitchenOffline'),
       navBoardStyle: navStyle(view === 'board'),
       navOrdersStyle: navStyle(view === 'orders'),
       navAttentionStyle: navStyle(view === 'attention'),
@@ -350,6 +361,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       navReportsStyle: navStyle(false),
       navSettingsStyle: navStyle(false),
       toggleLocationMenu: () => setShowLocationMenu((v) => !v),
+      toggleSidebar: () => setSidebarOpen((v) => !v),
+      closeSidebar: () => setSidebarOpen(false),
       selectRomaNorte: () => {
         setLocation('Roma Norte')
         setShowLocationMenu(false)
@@ -363,22 +376,27 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       goToBoard: () => {
         setView('board')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       goToOrders: () => {
         setView('orders')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       goToAttention: () => {
         setView('attention')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       goToPayments: () => {
         setView('payments')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       goToConversations: () => {
         setView('conversations')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
         setConversationsSelectedId(
           (prev) => prev || (sortedActive[0] && sortedActive[0].id) || null,
         )
@@ -386,10 +404,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       goToCustomers: () => {
         setView('customers')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       goToMenu: () => {
         setView('menu')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
         setShowItemModal(false)
         setItemForm(EMPTY_ITEM_FORM)
         setShowCategoryInput(false)
@@ -398,8 +418,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       goToPlaceholder: () => {
         setView('placeholder')
         setSelectedOrderId(null)
+        setSidebarOpen(false)
       },
       selectOrder,
+      clearConversationSelection: () => setConversationsSelectedId(null),
       goBack: () => {
         setView(previousView)
         setSelectedOrderId(null)
@@ -412,7 +434,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           status: 'ready_for_kitchen',
           proof: { ...order.proof, reviewStatus: 'verified' },
         })
-        showToast('Payment verified — moved to Ready for kitchen')
+        showToast(t('toast.paymentVerified'))
       },
       rejectPayment: (id) => {
         const order = orders.find((o) => o.id === id)
@@ -421,16 +443,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
           issueType: 'payment_invalid',
           proof: { ...order.proof, reviewStatus: 'rejected' },
         })
-        showToast('Payment rejected')
+        showToast(t('toast.paymentRejected'))
       },
       resolveIssue: (id) => {
         updateOrder(id, { issueType: null, status: 'ready_for_kitchen' })
-        showToast('Issue resolved — moved to Ready for kitchen')
+        showToast(t('toast.issueResolved'))
       },
-      contactCustomer: () => showToast('Opening WhatsApp conversation…'),
+      contactCustomer: () => showToast(t('toast.whatsapp')),
       cancelOrder: (id) => {
         updateOrder(id, { status: 'cancelled' })
-        showToast('Order cancelled')
+        showToast(t('toast.cancelled'))
         setView(previousView)
         setSelectedOrderId(null)
       },
@@ -447,7 +469,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         const next = nextMap[order.status]
         if (next) {
           updateOrder(id, { status: next })
-          showToast(`Moved to ${COLUMN_LABELS[next]}`)
+          showToast(t('toast.moved', { status: statusLabel(next, t) }))
         }
       },
       selectConversation: setConversationsSelectedId,
@@ -485,7 +507,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setMenu((prev) => [...prev, { name, items: [] }])
         setShowCategoryInput(false)
         setCategoryDraft('')
-        showToast(`Added category "${name}"`)
+        showToast(t('toast.categoryAdded', { name }))
       },
       openAddItem: (categoryName) => {
         setShowItemModal(true)
@@ -513,7 +535,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         const name = itemForm.name.trim()
         const price = parseFloat(itemForm.price)
         if (!name || Number.isNaN(price)) {
-          showToast('Name and price are required')
+          showToast(t('toast.itemRequired'))
           return
         }
         const options = itemForm.options
@@ -536,14 +558,18 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         )
         setShowItemModal(false)
         setItemForm(EMPTY_ITEM_FORM)
-        showToast(`Added "${name}" to ${itemForm.category}`)
+        showToast(
+          t('toast.itemAdded', { name, category: itemForm.category }),
+        )
       },
     }
   }, [
+    t,
     view,
     previousView,
     location,
     showLocationMenu,
+    sidebarOpen,
     kitchenOnline,
     searchQuery,
     orders,

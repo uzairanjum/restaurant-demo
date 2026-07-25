@@ -11,4 +11,19 @@
   overflow-x: auto;
   padding-bottom: 12px;
   align-items: flex-start;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .boardColumns {
+    margin: 0 -14px;
+    padding: 0 14px 16px;
+    gap: 12px;
+  }
+
+  .boardColumns > * {
+    scroll-snap-align: start;
+    width: min(280px, calc(100vw - 56px));
+  }
 }

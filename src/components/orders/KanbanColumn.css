@@ -62,3 +62,9 @@
   font: 400 10.5px var(--font-body);
   color: var(--fg-tertiary);
 }
+
+@media (max-width: 768px) {
+  .kanbanColumn {
+    width: min(280px, calc(100vw - 56px));
+  }
+}

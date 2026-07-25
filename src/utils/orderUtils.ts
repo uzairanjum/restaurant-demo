@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import type { TranslateFn, TranslationKey } from '../i18n'
 import type { IssueType, Order, OrderStatus } from '../types/order'
 
 export function chipStyle(bg: string, fg: string): CSSProperties {
@@ -18,28 +19,11 @@ export function money(n: number): string {
   return n.toFixed(2)
 }
 
-export const ISSUE_LABELS: Record<IssueType, string> = {
-  payment_review: 'Payment verification required',
-  payment_invalid: 'Payment invalid — amount mismatch',
-  missing_address: 'Missing delivery address',
-  customer_change: 'Customer requested a change',
-}
-
 export const ISSUE_TONE: Record<IssueType, { bg: string; fg: string }> = {
   payment_review: { bg: '#FFF0F1', fg: '#9B1B2C' },
   payment_invalid: { bg: '#FFF0F1', fg: '#9B1B2C' },
   missing_address: { bg: '#FFF8EB', fg: '#8A5208' },
   customer_change: { bg: '#F4ECFF', fg: '#5D38C3' },
-}
-
-export const COLUMN_LABELS: Record<OrderStatus, string> = {
-  needs_attention: 'Needs attention',
-  ready_for_kitchen: 'Ready for kitchen',
-  preparing: 'Preparing',
-  ready: 'Ready',
-  out_for_delivery: 'Out for delivery',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
 }
 
 export const COLUMN_TONE: Record<
@@ -54,7 +38,11 @@ export const COLUMN_TONE: Record<
   completed: { bg: '#F5F5F5', fg: '#555E67' },
 }
 
-export function enrichOrder(o: Order) {
+export function statusLabel(status: OrderStatus, t: TranslateFn): string {
+  return t(`status.${status}` as TranslationKey)
+}
+
+export function enrichOrder(o: Order, t: TranslateFn) {
   const paymentStatus =
     o.paymentMethod === 'cod'
       ? 'cod'
@@ -65,10 +53,10 @@ export function enrichOrder(o: Order) {
           : 'paid'
 
   const paymentStatusLabel = {
-    cod: 'COD',
-    review: 'Payment review',
-    invalid: 'Payment invalid',
-    paid: 'Paid',
+    cod: t('payment.cod'),
+    review: t('payment.review'),
+    invalid: t('payment.invalid'),
+    paid: t('payment.paid'),
   }[paymentStatus]
 
   const paymentStatusTone = {
@@ -95,12 +83,16 @@ export function enrichOrder(o: Order) {
     totalStr: money(o.total),
     deliveryFeeStr: money(o.deliveryFee),
     itemsSummary: o.items.map((it) => `${it.qty}x ${it.name}`).join(', '),
-    fulfillmentLabel: o.fulfillment === 'delivery' ? 'Delivery' : 'Pickup',
+    fulfillmentLabel:
+      o.fulfillment === 'delivery'
+        ? t('fulfillment.delivery')
+        : t('fulfillment.pickup'),
     fulfillmentChipStyle: chipStyle(
       o.fulfillment === 'delivery' ? '#ECF3FF' : '#F5F5F5',
       o.fulfillment === 'delivery' ? '#1F4FAA' : '#555E67',
     ),
-    paymentMethodLabel: o.paymentMethod === 'cod' ? 'COD' : 'Bank transfer',
+    paymentMethodLabel:
+      o.paymentMethod === 'cod' ? t('payment.cod') : t('payment.bank_transfer'),
     paymentStatusLabel,
     paymentStatusChipStyle: chipStyle(
       paymentStatusTone.bg,
@@ -108,9 +100,11 @@ export function enrichOrder(o: Order) {
     ),
     timeLabel: `${o.placedMinAgo}m`,
     timeChipStyle: chipStyle(timeTone.bg, timeTone.fg),
-    issueLabel: o.issueType ? ISSUE_LABELS[o.issueType] : null,
+    issueLabel: o.issueType
+      ? t(`issue.${o.issueType}` as TranslationKey)
+      : null,
     issueChipStyle: issueTone ? chipStyle(issueTone.bg, issueTone.fg) : null,
-    columnLabel: COLUMN_LABELS[o.status],
+    columnLabel: statusLabel(o.status, t),
     columnChipStyle: chipStyle(columnTone.bg, columnTone.fg),
   }
 }

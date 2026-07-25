@@ -1,22 +1,22 @@
 import { useDashboard } from '../../context/DashboardContext'
+import { useT } from '../../context/LanguageContext'
 
 export function PaymentsView() {
   const { bankTransferOrders, selectOrder } = useDashboard()
+  const t = useT()
 
   return (
     <>
-      <h1 className="pageTitle">Payments</h1>
-      <p className="pageSubtitle">
-        Bank-transfer orders awaiting or recently reviewed for proof of payment.
-      </p>
+      <h1 className="pageTitle">{t('payments.title')}</h1>
+      <p className="pageSubtitle">{t('payments.subtitle')}</p>
       <div className="tableShell">
         <div className="tableHead" style={{ gridTemplateColumns: '1fr 1.6fr 1fr 1fr 1fr 0.9fr' }}>
-          <div>Order</div>
-          <div>Customer</div>
-          <div>Txn ID</div>
-          <div>Submitted</div>
-          <div>Review status</div>
-          <div style={{ textAlign: 'right' }}>Amount</div>
+          <div>{t('orders.col.order')}</div>
+          <div>{t('orders.col.customer')}</div>
+          <div>{t('payments.col.txn')}</div>
+          <div>{t('payments.col.submitted')}</div>
+          <div>{t('payments.col.review')}</div>
+          <div style={{ textAlign: 'right' }}>{t('payments.col.amount')}</div>
         </div>
         {bankTransferOrders.map((o) => (
           <button

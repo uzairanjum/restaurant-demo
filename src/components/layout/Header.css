@@ -11,6 +11,25 @@
   z-index: 30;
 }
 
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.header__menuBtn {
+  display: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--fg-secondary);
+  flex-shrink: 0;
+}
+
 .header__brand {
   display: flex;
   align-items: center;
@@ -112,12 +131,14 @@
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .header__search {
   flex: 1;
   max-width: 380px;
   position: relative;
+  min-width: 0;
 }
 
 .header__search svg {
@@ -126,6 +147,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--fg-tertiary);
+  pointer-events: none;
 }
 
 .header__search input {
@@ -144,6 +166,22 @@
   flex: 1;
 }
 
+.header__lang {
+  flex-shrink: 0;
+}
+
+.header__lang select {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--fg-secondary);
+  font: 600 12px var(--font-body);
+  outline: none;
+  cursor: pointer;
+}
+
 .header__notifyBtn {
   position: relative;
   border: 0;
@@ -154,6 +192,7 @@
   border-radius: 8px;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
 }
 
 .header__notifyBadge {
@@ -176,6 +215,7 @@
   gap: 9px;
   padding-left: 8px;
   border-left: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .header__avatar {
@@ -200,4 +240,94 @@
 .header__userText div:last-child {
   font: 400 10.5px var(--font-body);
   color: var(--fg-tertiary);
+}
+
+@media (max-width: 1100px) {
+  .header {
+    gap: 10px;
+    padding: 0 14px;
+  }
+
+  .header__brand {
+    min-width: 0;
+  }
+
+  .header__brandSub,
+  .header__userText,
+  .header__spacer {
+    display: none;
+  }
+
+  .header__user {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .header__search {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 56px;
+    padding: 10px 12px;
+    gap: 8px;
+    row-gap: 10px;
+  }
+
+  .header__menuBtn {
+    display: grid;
+  }
+
+  .header__brand {
+    min-width: 0;
+  }
+
+  .header__brandName {
+    font-size: 14px;
+  }
+
+  .header__kitchenLabel {
+    display: none;
+  }
+
+  .header__kitchenBtn {
+    padding: 0 10px;
+  }
+
+  .header__locationLabel {
+    max-width: 72px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header__search {
+    order: 10;
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .header__lang {
+    margin-left: auto;
+  }
+
+  .header__lang select {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 420px) {
+  .header__locationBtn {
+    padding: 0 8px;
+  }
+
+  .header__brandName {
+    display: none;
+  }
 }
