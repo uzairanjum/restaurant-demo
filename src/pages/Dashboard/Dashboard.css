@@ -1,0 +1,22 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-canvas);
+  color: var(--fg-primary);
+  font-size: 13.5px;
+  overflow: hidden;
+}
+
+.dashboard__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.dashboard__main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 22px 24px;
+}

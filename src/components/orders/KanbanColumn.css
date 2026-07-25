@@ -1,0 +1,64 @@
+.kanbanColumn {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--bg-subtle);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kanbanColumn__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanbanColumn__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.kanbanColumn__icon--coral {
+  background: var(--c-coral-50);
+  color: var(--c-coral-600);
+}
+
+.kanbanColumn__icon--cold {
+  background: var(--c-cold-50);
+  color: var(--c-cold-700);
+}
+
+.kanbanColumn__icon--amber {
+  background: var(--c-amber-50);
+  color: var(--c-amber-700);
+}
+
+.kanbanColumn__icon--teal {
+  background: var(--c-teal-50);
+  color: var(--c-teal-700);
+}
+
+.kanbanColumn__icon--neutral {
+  background: var(--bg-hover);
+  color: var(--fg-secondary);
+}
+
+.kanbanColumn__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.kanbanColumn__title {
+  font: 700 13px var(--font-display);
+}
+
+.kanbanColumn__subtitle {
+  font: 400 10.5px var(--font-body);
+  color: var(--fg-tertiary);
+}

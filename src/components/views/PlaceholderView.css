@@ -1,0 +1,29 @@
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+  gap: 10px;
+  text-align: center;
+}
+
+.placeholder__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--bg-subtle);
+  display: grid;
+  place-items: center;
+  color: var(--fg-tertiary);
+}
+
+.placeholder__title {
+  font: 700 15px var(--font-display);
+}
+
+.placeholder__text {
+  font: 400 12.5px var(--font-body);
+  color: var(--fg-tertiary);
+  max-width: 280px;
+}

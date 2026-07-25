@@ -1,0 +1,217 @@
+.menuCategory {
+  margin-bottom: 22px;
+}
+
+.menuCategory h2 {
+  margin: 0 0 12px;
+  font: 700 14.5px var(--font-display);
+}
+
+.menuGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+
+.menuItem {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menuItem__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.menuItem__name {
+  font: 700 14px var(--font-display);
+}
+
+.menuItem__price {
+  font: 700 14px var(--font-display);
+  white-space: nowrap;
+}
+
+.menuItem__desc {
+  font: 400 12px var(--font-body);
+  color: var(--fg-tertiary);
+}
+
+.menuItem__label {
+  font: 700 9.5px var(--font-body);
+  color: var(--fg-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+}
+
+.menuItem__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.menuItem__tag {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font: 500 10.5px var(--font-body);
+}
+
+.menuItem__tag--neutral {
+  background: var(--bg-subtle);
+  color: var(--fg-secondary);
+}
+
+.menuItem__tag--brand {
+  background: var(--brand-bg);
+  color: var(--brand-fg);
+}
+
+.menuAddBtn,
+.menuAddCategoryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px dashed var(--border-default);
+  color: var(--brand-fg);
+  font: 600 12.5px var(--font-body);
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.menuAddCategoryBtn {
+  padding: 9px 16px;
+  margin-top: 0;
+}
+
+.menuCategoryInput {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.menuCategoryInput input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  font: 400 12.5px var(--font-body);
+  width: 220px;
+  outline: none;
+}
+
+.menuModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 12, 18, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+
+.menuModal {
+  background: var(--bg-surface);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px -20px rgba(7, 17, 29, 0.4);
+  width: 460px;
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.menuModal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.menuModal__head h2 {
+  margin: 0;
+  font: 700 15px var(--font-display);
+}
+
+.menuModal__head button {
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--fg-tertiary);
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.menuModal__body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menuModal__body input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  font: 400 12.5px var(--font-body);
+  outline: none;
+}
+
+.menuModal__addon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--bg-subtle);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.menuModal__addon button {
+  border: 0;
+  background: transparent;
+  color: var(--fg-tertiary);
+  font: 600 11px var(--font-body);
+}
+
+.menuModal__addonInput {
+  display: flex;
+  gap: 8px;
+}
+
+.menuModal__addonInput input:first-child {
+  flex: 1;
+}
+
+.menuModal__addonInput input:nth-child(2) {
+  width: 80px;
+}
+
+.menuModal__addonInput button {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--fg-secondary);
+  font: 600 12px var(--font-body);
+}
+
+.menuModal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-subtle);
+}
